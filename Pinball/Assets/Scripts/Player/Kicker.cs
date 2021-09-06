@@ -28,6 +28,7 @@ public class Kicker : MonoBehaviour
     }
 
     void OnValidate() {
+        print("Validate");
         m_actualActivatedDirection = transform.rotation * m_activatedDirection;
         m_actualDeactivatedDirection = transform.rotation * m_deactivatedDirection;
         if (active)
@@ -38,14 +39,26 @@ public class Kicker : MonoBehaviour
 
     IEnumerator RotateOnZ(Vector3 direction) {
         direction = direction.normalized;
+        
         Vector3 velo = Vector3.zero;
         Vector3 perpendicular = Vector3.Cross(transform.rotation * m_rotatingAxis, direction).normalized;
         velo.z = m_rotationSpeed * Mathf.Sign(perpendicular.z);
         m_rigidbody.angularVelocity = velo;
+        
         for (; Vector3.Cross(transform.rotation * m_rotatingAxis, direction).normalized == perpendicular.normalized;) {
             yield return null;
         }
         m_rigidbody.angularVelocity = Vector3.zero;
+        
+        Vector3 upDirection = Vector3.Cross(transform.forward, direction);
+        Debug.DrawRay(transform.position, upDirection, Color.grey, 10f);
+
+        Vector3 startCOMpos = transform.position + transform.rotation * m_rigidbody.centerOfMass;
+
+        transform.LookAt(transform.position + transform.forward, upDirection);
+
+        Vector3 COMpos = transform.position + transform.rotation * m_rigidbody.centerOfMass;
+        transform.position += (startCOMpos - COMpos);
     }
 
     public void Activate()
@@ -53,6 +66,7 @@ public class Kicker : MonoBehaviour
         if (activated)
             return;
         activated = true;
+        
         StopCoroutine("RotateOnZ");
         StartCoroutine(RotateOnZ(m_actualActivatedDirection));
     }
@@ -62,6 +76,7 @@ public class Kicker : MonoBehaviour
         if (!activated)
             return;
         activated = false;
+        
         StopCoroutine("RotateOnZ");
         StartCoroutine(RotateOnZ(m_actualDeactivatedDirection));
     }

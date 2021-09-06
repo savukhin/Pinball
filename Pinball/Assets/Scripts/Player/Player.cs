@@ -17,10 +17,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (controller.Left()) {
-            print("Left controller");
+        if (controller.Left())
             leftKicker.Activate();
-        } else
+        else
             leftKicker.Deactivate();
         if (controller.Right())
             rightKicker.Activate();
