@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private Kicker leftKicker;
+    [SerializeField] private Kicker rightKicker;
+    [SerializeField] private BaseController controller;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +17,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (controller.Left()) {
+            print("Left controller");
+            leftKicker.Activate();
+        } else
+            leftKicker.Deactivate();
+        if (controller.Right())
+            rightKicker.Activate();
+        else
+            rightKicker.Deactivate();
     }
 }
