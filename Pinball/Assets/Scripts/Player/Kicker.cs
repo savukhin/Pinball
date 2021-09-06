@@ -51,7 +51,8 @@ public class Kicker : MonoBehaviour
         m_rigidbody.angularVelocity = Vector3.zero;
         
         Vector3 upDirection = Vector3.Cross(transform.forward, direction);
-        Debug.DrawRay(transform.position, upDirection, Color.grey, 10f);
+        // Making only in up on Y
+        upDirection = Mathf.Sign(Vector3.Dot(upDirection, Vector3.up)) * upDirection;
 
         Vector3 startCOMpos = transform.position + transform.rotation * m_rigidbody.centerOfMass;
 
